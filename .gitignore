@@ -1,0 +1,27 @@
+# Environment variables
+.env
+.venv/
+venv/
+ENV/
+
+# Python compiled bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Backend data and uploaded assets
+backend/data/
+backend/uploads/
+*.db
+*.sqlite3
+
+# Frontend dependencies and builds
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS / IDE specific junk files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
