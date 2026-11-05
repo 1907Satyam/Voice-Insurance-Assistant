@@ -20,13 +20,21 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+# Safely parse CORS origins whether it's a comma-separated string or a list
+if isinstance(settings.cors_origins, str):
+    origins = [origin.strip() for origin in settings.cors_origins.split(",")]
+else:
+    origins = settings.cors_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["*"],  # Allows all methods (GET, POST, OPTIONS, etc.) for preflight
     allow_headers=["*"],
 )
+
 app.include_router(voice.router)
 app.include_router(policies.router)
 app.include_router(claims.router)
