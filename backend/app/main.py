@@ -20,19 +20,19 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Safely parse CORS origins whether it's a comma-separated string or list, and remove trailing slashes
-if isinstance(settings.cors_origins, str):
-    raw_origins = [origin.strip() for origin in settings.cors_origins.split(",")]
+# Parse CORS origins whether passed as a comma-separated string or a list,
+# strip trailing slashes, and fall back safely to wildcard if unset.
+raw_origins = getattr(settings, "cors_origins", "*")
+if isinstance(raw_origins, str):
+    origins = [o.strip().rstrip("/") for o in raw_origins.split(",") if o.strip()]
 else:
-    raw_origins = settings.cors_origins
-
-origins = list(dict.fromkeys(origin.rstrip("/") for origin in raw_origins if origin))
+    origins = [str(o).rstrip("/") for o in raw_origins] if raw_origins else ["*"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins if origins else ["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, OPTIONS, etc.) for preflight
+    allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"],
 )
