@@ -10,7 +10,7 @@ from app.config import settings
 from app.db.database import get_db
 from app.db.models import Claim, ClaimDocument, Policy
 
-router = APIRouter(prefix="/api/v1/claims", tags=["claims"])
+router = APIRouter(prefix="/claims", tags=["claims"])
 
 
 class ClaimCreate(BaseModel):

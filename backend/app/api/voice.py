@@ -15,7 +15,7 @@ from app.services.provider import ProviderConfigurationError
 from app.services.rag_engine import claim_context, policy_context, retrieve_policies
 from app.services.timbre_tts import synthesize_speech
 
-router = APIRouter(prefix="/api/v1/voice", tags=["voice"])
+router = APIRouter(prefix="/voice", tags=["voice"])
 logger = logging.getLogger(__name__)
 
 

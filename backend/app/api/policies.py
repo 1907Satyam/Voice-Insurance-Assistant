@@ -4,11 +4,10 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.db.models import Policy
 
-router = APIRouter(tags=["policies"])
+router = APIRouter(prefix="/policies", tags=["policies"])
 
 
-@router.get("/api/v1/policies")
-@router.get("/api/policies", include_in_schema=False)
+@router.get("")
 def list_policies(db: Session = Depends(get_db)):
     policies = db.query(Policy).order_by(Policy.id).all()
     return [

@@ -31,9 +31,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(voice.router)
-app.include_router(policies.router)
-app.include_router(claims.router)
+app.include_router(voice.router, prefix="/api/v1")
+app.include_router(policies.router, prefix="/api/v1")
+app.include_router(claims.router, prefix="/api/v1")
 
 
 @app.get("/health")
