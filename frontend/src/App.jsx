@@ -28,7 +28,11 @@ export default function App() {
   useEffect(() => {
     fetchPolicies()
       .then(setPolicies)
-      .catch(() => setNotice("Policy options are temporarily unavailable. You can still submit a claim without selecting a policy."));
+      .catch((error) =>
+        setNotice(
+          `Policy options are temporarily unavailable (${error.message}). You can still submit a claim without selecting a policy.`,
+        ),
+      );
   }, []);
 
   useEffect(() => {

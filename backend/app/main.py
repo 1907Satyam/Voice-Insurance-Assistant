@@ -1,5 +1,4 @@
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -21,14 +20,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-origins = list(dict.fromkeys(origin.rstrip("/") for origin in settings.cors_origins))
+# Safely parse CORS origins whether it's a comma-separated string or list, and remove trailing slashes
+if isinstance(settings.cors_origins, str):
+    raw_origins = [origin.strip() for origin in settings.cors_origins.split(",")]
+else:
+    raw_origins = settings.cors_origins
+
+origins = list(dict.fromkeys(origin.rstrip("/") for origin in raw_origins if origin))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins if origins else ["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, OPTIONS, etc.) for preflight
+    allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, OPTIONS, etc.) for preflight
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 app.include_router(voice.router, prefix="/api/v1")

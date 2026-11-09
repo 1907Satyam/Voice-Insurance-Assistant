@@ -97,3 +97,17 @@
 * **Files Created/Modified:** `backend/.env`, `backend/.env.example`, `backend/.gitignore`, `backend/app/config.py`, provider/API/database modules, `README.md`, `brain/Agent_memory.md`.
 * **Validation:** Backend Python syntax compilation and TestClient startup passed using `backend/.env`; health, seeded policy, and missing Gnani configuration responses were verified.
 * **Current Status:** Configuration refactor complete. Local Gnani keys and service endpoints are intentionally blank and must be set from the provider account before live voice calls.
+
+### Prompt 4: Render/Neon seeding, policy endpoint, and CORS reliability
+* **Actions Taken:**
+  * Made demo seed records idempotent by natural keys, added a PostgreSQL advisory lock around seeding, and synchronized generated ID sequences to existing rows.
+  * Adapted standard Neon PostgreSQL URLs to the psycopg 3 driver already listed in backend dependencies.
+  * Exposed the policy list at both `/api/policies` and `/api/v1/policies`, and made results deterministic.
+  * Normalized configured CORS origins and documented the required Render/Neon environment values; the frontend now surfaces policy-fetch errors instead of hiding their cause.
+* **Validation:** TestClient preloaded a row with primary key `1`, ran seeding repeatedly, and verified no duplicate primary keys or duplicate demo records, existing and seeded policy results on both paths, plus Vercel CORS preflight. Backend syntax and frontend production build passed; standard/legacy PostgreSQL URL normalization was checked. Live Neon connectivity remains unverified from this workspace.
+* **Current Status:** Deployment-hardening changes complete. Production Render/Neon environment values cannot be verified from this local workspace; set `DATABASE_URL` and `CORS_ORIGINS` in Render's environment.
+
+### Prompt 5: Global API version prefix
+* **Actions Taken:** Applied `/api/v1` once at the application router-inclusion layer and made policies, voice, and claims router paths relative to that shared prefix.
+* **Files Modified:** `backend/app/main.py`, `backend/app/api/policies.py`, `backend/app/api/voice.py`, `backend/app/api/claims.py`, `brain/Agent_memory.md`.
+* **Validation:** Confirmed the versioned policy, voice, and claims routes register once without duplicated `/api/v1` segments; backend compile and TestClient checks passed.

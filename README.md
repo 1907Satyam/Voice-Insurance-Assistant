@@ -59,6 +59,27 @@ are required configuration values. The application does not guess provider hosts
 `X-API-Key-ID` header; Evon is expected to accept an OpenAI-compatible chat
 completion request and return JSON content with `intent` and `response`.
 
+## Render and Vercel deployment
+
+Configure these values in Render's backend environment (the ignored local
+`backend/.env` file is not deployed):
+
+- `PROJECT_NAME=Voice Insurance Assistant`
+- `DATABASE_URL` — Neon PostgreSQL URL. Standard `postgresql://` and legacy
+  `postgres://` URLs are adapted to the installed psycopg 3 driver.
+- `UPLOAD_DIR` — for example `/opt/render/project/src/backend/uploads`. Use a
+  persistent disk or external object storage if uploaded documents must survive
+  Render instance replacement.
+- `CORS_ORIGINS=https://voice-insurance-assistant.vercel.app` (add any other
+  trusted frontend origins as comma-separated values).
+- The Gnani provider key ID and URLs for live voice interactions.
+
+The policy list is available at both `/api/policies` and
+`/api/v1/policies`. Startup seeding checks natural keys before adding demo rows
+and synchronizes PostgreSQL generated-ID sequences to existing table values.
+The seed operation uses a PostgreSQL advisory lock so concurrent Render
+instances do not insert the same demo records at once.
+
 ## Production checklist
 
 This repository is a runnable MVP, not a deployment-ready insurance system.
