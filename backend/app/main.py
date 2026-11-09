@@ -20,21 +20,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Parse CORS origins whether passed as a comma-separated string or a list,
-# strip trailing slashes, and fall back safely to wildcard if unset.
-raw_origins = getattr(settings, "cors_origins", "*")
-if isinstance(raw_origins, str):
-    origins = [o.strip().rstrip("/") for o in raw_origins.split(",") if o.strip()]
-else:
-    origins = [str(o).rstrip("/") for o in raw_origins] if raw_origins else ["*"]
+vercel_origin = "https://voice-insurance-assistant.vercel.app"
+origins = list(
+    dict.fromkeys(
+        origin.rstrip("/")
+        for origin in [*settings.cors_origins, vercel_origin]
+        if origin.strip()
+    )
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins else ["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
-    expose_headers=["*"],
 )
 
 app.include_router(voice.router, prefix="/api/v1")

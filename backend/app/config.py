@@ -49,7 +49,8 @@ class Settings:
             cors_origins=[
                 origin.strip()
                 for origin in os.getenv(
-                    "CORS_ORIGINS", "http://localhost:5173"
+                    "CORS_ORIGINS",
+                    "http://localhost:5173,https://voice-insurance-assistant.vercel.app",
                 ).split(",")
                 if origin.strip()
             ],

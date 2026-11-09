@@ -111,3 +111,8 @@
 * **Actions Taken:** Applied `/api/v1` once at the application router-inclusion layer and made policies, voice, and claims router paths relative to that shared prefix.
 * **Files Modified:** `backend/app/main.py`, `backend/app/api/policies.py`, `backend/app/api/voice.py`, `backend/app/api/claims.py`, `brain/Agent_memory.md`.
 * **Validation:** Confirmed the versioned policy, voice, and claims routes register once without duplicated `/api/v1` segments; backend compile and TestClient checks passed.
+
+### Prompt 6: Vercel-to-Render API connectivity and CORS
+* **Actions Taken:** Updated every frontend service request to build absolute `/api/v1` URLs from `VITE_API_BASE_URL`, with no localhost or relative URL fallback. Explicitly allowed the production Vercel origin in backend CORS and enabled OPTIONS preflight. Updated environment examples for the Render/Vercel deployment.
+* **Files Modified:** `frontend/src/services/api.js`, `frontend/.env.example`, `backend/app/config.py`, `backend/app/main.py`, `backend/.env.example`, `brain/Agent_memory.md`.
+* **Validation:** Frontend service-module search confirms no localhost or relative fetch URL; backend preflight and frontend production build passed.
