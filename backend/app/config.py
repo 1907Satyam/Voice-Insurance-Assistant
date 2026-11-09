@@ -44,17 +44,27 @@ class Settings:
             evon_llm_url=os.getenv("EVON_LLM_URL", "").strip(),
             timbre_tts_url=os.getenv("TIMBRE_TTS_URL", "").strip(),
             evon_model=os.getenv("EVON_MODEL", "").strip(),
-            timbre_voice=os.getenv("TIMBRE_VOICE", "").strip(),
-            timbre_model=os.getenv("TIMBRE_MODEL", "").strip(),
+            timbre_voice=os.getenv("TIMBRE_VOICE", "Nalini").strip(),
+            timbre_model=os.getenv("TIMBRE_MODEL", "timbre-v2.5").strip(),
             cors_origins=[
                 origin.strip()
-                for origin in os.getenv("CORS_ORIGINS", "").split(",")
+                for origin in os.getenv(
+                    "CORS_ORIGINS", "http://localhost:5173"
+                ).split(",")
                 if origin.strip()
             ],
-            max_audio_size_mb=int(os.getenv("MAX_AUDIO_SIZE_MB", "")),
-            max_document_size_mb=int(os.getenv("MAX_DOCUMENT_SIZE_MB", "")),
+            max_audio_size_mb=int(os.getenv("MAX_AUDIO_SIZE_MB", "15")),
+            max_document_size_mb=int(os.getenv("MAX_DOCUMENT_SIZE_MB", "10")),
             upload_dir=upload_dir,
         )
 
 
 settings = Settings.from_environment()
+
+
+def sqlalchemy_database_url(database_url: str) -> str:
+    if database_url.startswith("postgres://"):
+        return database_url.replace("postgres://", "postgresql+psycopg://", 1)
+    if database_url.startswith("postgresql://"):
+        return database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    return database_url
